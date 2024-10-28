@@ -1,0 +1,146 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Display</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 20px;
+        }
+        input[type="number"] {
+            width: 100px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        #imageContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        .image-wrapper {
+            position: relative;
+            max-width: 100%;
+            transition: transform 0.3s ease;
+        }
+        .image-wrapper img {
+            width: 300px;
+            height: auto;
+            border: 2px solid #ddd;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .delete-button {
+            position: absolute;
+            right: -60px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: red;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            transition: opacity 0.3s ease, right 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .image-wrapper.slide-left .delete-button {
+            right: 10px;
+            opacity: 1;
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body>
+    <p>Kortnummer mellan 1 och 48:</p>
+    <input type="number" id="imageNumber" min="1" max="48">
+    <button onclick="displayImage()">Visa</button>
+    <div id="imageContainer"></div>
+
+    <script>
+        function displayImage() {
+            const imageNumberInput = document.getElementById('imageNumber');
+            var imageNumber = imageNumberInput.value;
+
+            let paddedNumber;
+
+            if (imageNumber < 1 || imageNumber > 48) {
+                paddedNumber = 49;
+            } else {
+                paddedNumber = imageNumber.padStart(2, '0');
+            }
+
+            const imageContainer = document.getElementById('imageContainer');
+
+            // Clear the input field after showing the image
+            imageNumberInput.value = '';
+
+            // Create a new image wrapper element
+            const imageWrapper = document.createElement('div');
+            imageWrapper.className = 'image-wrapper';
+
+            // Create the image element
+            const img = document.createElement('img');
+            img.src = `${paddedNumber}.png`;
+            img.alt = `Image ${paddedNumber}`;
+
+            // Create the delete button
+            const deleteButton = document.createElement('button');
+            deleteButton.className = 'delete-button';
+            deleteButton.textContent = 'Ta bort';
+            deleteButton.onclick = function() {
+                imageContainer.removeChild(imageWrapper);
+            };
+
+            // Add touch/mouse event listeners to slide the image
+            let startX;
+            imageWrapper.addEventListener('mousedown', startDrag);
+            imageWrapper.addEventListener('touchstart', startDrag);
+
+            function startDrag(event) {
+                startX = event.touches ? event.touches[0].clientX : event.clientX;
+                document.addEventListener('mousemove', drag);
+                document.addEventListener('touchmove', drag);
+                document.addEventListener('mouseup', endDrag);
+                document.addEventListener('touchend', endDrag);
+            }
+
+            function drag(event) {
+                const currentX = event.touches ? event.touches[0].clientX : event.clientX;
+                const deltaX = currentX - startX;
+                if (deltaX < -50) {
+                    imageWrapper.classList.add('slide-left');
+                } else {
+                    imageWrapper.classList.remove('slide-left');
+                }
+            }
+
+            function endDrag() {
+                document.removeEventListener('mousemove', drag);
+                document.removeEventListener('touchmove', drag);
+                document.removeEventListener('mouseup', endDrag);
+                document.removeEventListener('touchend', endDrag);
+            }
+
+            // Append the image and delete button to the image wrapper
+            imageWrapper.appendChild(img);
+            imageWrapper.appendChild(deleteButton);
+
+            // Prepend the image wrapper directly at the top of the container
+            imageContainer.prepend(imageWrapper);
+        }
+
+        // Add event listener for the 'Enter' key on the input field
+        document.getElementById('imageNumber').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' || event.keyCode === 13) {
+                event.preventDefault(); // Prevent form submission if inside a form
+                displayImage();
+            }
+        });
+    </script>
+</body>
+</html>
