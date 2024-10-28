@@ -11,6 +11,7 @@
             font-family: Arial, sans-serif;
             text-align: center;
             margin-top: 20px;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
         }
         input[type="number"] {
             width: 100px;
@@ -28,19 +29,27 @@
             border-radius: 5px;
             transition: background-color 0.3s;
         }
+        button:hover {
+            background-color: #0056b3; /* Darker shade on hover */
+        }
         #imageContainer {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 20px;
+            width: 100%; /* Ensures container width is constrained */
+            max-width: 100%; /* Prevents container from overflowing */
+            overflow-x: hidden; /* Prevents horizontal scrolling */
         }
         .image-wrapper {
             position: relative;
             max-width: 100%;
+            width: 100%; /* Ensure the image wrapper does not exceed container */
             transition: transform 0.3s ease;
+            overflow: hidden; /* Hide overflow in the image wrapper */
         }
         .image-wrapper img {
-            width: 300px;
+            width: 100%; /* Ensure images are responsive and fit within wrapper */
             height: auto;
             border: 2px solid #ddd;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
