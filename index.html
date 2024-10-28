@@ -43,8 +43,10 @@
         }
         .image-wrapper {
             position: relative;
-            max-width: 100%;
-            width: 100%; /* Ensure the image wrapper does not exceed container */
+            max-width: calc(100% - 40px); /* Adjust for padding */
+            width: calc(100% - 40px); /* Adjust for padding */
+            padding: 0 20px; /* Add padding to the left and right */
+            box-sizing: border-box; /* Include padding in width calculations */
             transition: transform 0.3s ease;
             overflow: hidden; /* Hide overflow in the image wrapper */
         }
