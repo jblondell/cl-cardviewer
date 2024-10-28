@@ -97,8 +97,6 @@
     <div id="imageContainer"></div>
 
     <script>
-        const imageContainer = document.getElementById('imageContainer');
-
         function displayImage() {
             const imageNumberInput = document.getElementById('imageNumber');
             var imageNumber = imageNumberInput.value;
@@ -110,6 +108,8 @@
             } else {
                 paddedNumber = imageNumber.padStart(2, '0');
             }
+
+            const imageContainer = document.getElementById('imageContainer');
 
             // Clear the input field after showing the image
             imageNumberInput.value = '';
@@ -129,7 +129,6 @@
             deleteButton.textContent = 'Ta bort';
             deleteButton.onclick = function() {
                 imageContainer.removeChild(imageWrapper);
-                updateCookie(); // Update cookie after deletion
             };
 
             // Add touch/mouse event listeners to slide the image
@@ -168,98 +167,7 @@
 
             // Prepend the image wrapper directly at the top of the container
             imageContainer.prepend(imageWrapper);
-
-            // Update cookie after adding a new image
-            updateCookie();
         }
-
-        // Function to update the cookie with current images
-        function updateCookie() {
-            const images = Array.from(imageContainer.children).map(wrapper => {
-                const img = wrapper.querySelector('img');
-                return img ? img.alt.split(' ')[1] : null; // Extracting the image number
-            }).filter(Boolean); // Filter out nulls
-            document.cookie = `imageNumbers=${images.join(',')}; path=/; max-age=31536000`; // Expires in 1 year
-        }
-
-        // Function to load images from cookie
-        function loadImagesFromCookie() {
-            const cookieString = document.cookie.split('; ').find(row => row.startsWith('imageNumbers='));
-            if (cookieString) {
-                const imageNumbers = cookieString.split('=')[1].split(',');
-                // Reverse the order of images to display them correctly
-                imageNumbers.reverse().forEach(num => {
-                    const paddedNumber = num.padStart(2, '0');
-                    displayImageFromNumber(paddedNumber);
-                });
-            }
-        }
-
-        // Function to display the image directly from the number
-        function displayImageFromNumber(paddedNumber) {
-            // Create a new image wrapper element
-            const imageWrapper = document.createElement('div');
-            imageWrapper.className = 'image-wrapper';
-
-            // Create the image element
-            const img = document.createElement('img');
-            img.src = `${paddedNumber}.png`;
-            img.alt = `Image ${paddedNumber}`;
-
-            // Create the delete button
-            const deleteButton = document.createElement('button');
-            deleteButton.className = 'delete-button';
-            deleteButton.textContent = 'Ta bort';
-            deleteButton.onclick = function () {
-                imageContainer.removeChild(imageWrapper);
-                updateCookie(); // Update cookie after deletion
-            };
-
-            // Append the image and delete button to the image wrapper
-            imageWrapper.appendChild(img);
-            imageWrapper.appendChild(deleteButton);
-
-            // Prepend the image wrapper directly at the top of the container
-            imageContainer.prepend(imageWrapper);
-
-            // Add touch/mouse event listeners to slide the image
-            let startX;
-            imageWrapper.addEventListener('mousedown', startDrag);
-            imageWrapper.addEventListener('touchstart', startDrag);
-
-            function startDrag(event) {
-                startX = event.touches ? event.touches[0].clientX : event.clientX;
-
-                // Prevent default behavior to avoid scrolling during the swipe
-                event.preventDefault();
-                document.addEventListener('mousemove', drag);
-                document.addEventListener('touchmove', drag);
-                document.addEventListener('mouseup', endDrag);
-                document.addEventListener('touchend', endDrag);
-            }
-
-            function drag(event) {
-                const currentX = event.touches ? event.touches[0].clientX : event.clientX;
-                const deltaX = currentX - startX;
-
-                // Add a class to show the delete button if swiped left
-                if (deltaX < -50) {
-                    imageWrapper.classList.add('slide-left');
-                } else {
-                    imageWrapper.classList.remove('slide-left');
-                }
-            }
-
-            function endDrag() {
-                document.removeEventListener('mousemove', drag);
-                document.removeEventListener('touchmove', drag);
-                document.removeEventListener('mouseup', endDrag);
-                document.removeEventListener('touchend', endDrag);
-            }
-        }
-
-        // Load images from cookie on page load
-        window.onload = loadImagesFromCookie;
 
         // Add event listener for the 'Enter' key on the input field
         document.getElementById('imageNumber').addEventListener('keydown', function(event) {
