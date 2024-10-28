@@ -195,7 +195,7 @@
             }
         }
 
-        // Function to display image directly from number
+        // Function to display the image directly from the number
         function displayImageFromNumber(paddedNumber) {
             // Create a new image wrapper element
             const imageWrapper = document.createElement('div');
@@ -210,7 +210,7 @@
             const deleteButton = document.createElement('button');
             deleteButton.className = 'delete-button';
             deleteButton.textContent = 'Ta bort';
-            deleteButton.onclick = function() {
+            deleteButton.onclick = function () {
                 imageContainer.removeChild(imageWrapper);
                 updateCookie(); // Update cookie after deletion
             };
@@ -220,7 +220,42 @@
             imageWrapper.appendChild(deleteButton);
 
             // Prepend the image wrapper directly at the top of the container
-            imageContainer.prepend(imageWrapper); // Keep this as prepend
+            imageContainer.prepend(imageWrapper);
+
+            // Add touch/mouse event listeners to slide the image
+            let startX;
+            imageWrapper.addEventListener('mousedown', startDrag);
+            imageWrapper.addEventListener('touchstart', startDrag);
+
+            function startDrag(event) {
+                startX = event.touches ? event.touches[0].clientX : event.clientX;
+
+                // Prevent default behavior to avoid scrolling during the swipe
+                event.preventDefault();
+                document.addEventListener('mousemove', drag);
+                document.addEventListener('touchmove', drag);
+                document.addEventListener('mouseup', endDrag);
+                document.addEventListener('touchend', endDrag);
+            }
+
+            function drag(event) {
+                const currentX = event.touches ? event.touches[0].clientX : event.clientX;
+                const deltaX = currentX - startX;
+
+                // Add a class to show the delete button if swiped left
+                if (deltaX < -50) {
+                    imageWrapper.classList.add('slide-left');
+                } else {
+                    imageWrapper.classList.remove('slide-left');
+                }
+            }
+
+            function endDrag() {
+                document.removeEventListener('mousemove', drag);
+                document.removeEventListener('touchmove', drag);
+                document.removeEventListener('mouseup', endDrag);
+                document.removeEventListener('touchend', endDrag);
+            }
         }
 
         // Load images from cookie on page load
