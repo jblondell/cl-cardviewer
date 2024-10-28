@@ -187,7 +187,8 @@
             const cookieString = document.cookie.split('; ').find(row => row.startsWith('imageNumbers='));
             if (cookieString) {
                 const imageNumbers = cookieString.split('=')[1].split(',');
-                imageNumbers.forEach(num => {
+                // Reverse the order of images to display them correctly
+                imageNumbers.reverse().forEach(num => {
                     const paddedNumber = num.padStart(2, '0');
                     displayImageFromNumber(paddedNumber);
                 });
@@ -219,7 +220,7 @@
             imageWrapper.appendChild(deleteButton);
 
             // Prepend the image wrapper directly at the top of the container
-            imageContainer.prepend(imageWrapper);
+            imageContainer.prepend(imageWrapper); // Keep this as prepend
         }
 
         // Load images from cookie on page load
