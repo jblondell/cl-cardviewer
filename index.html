@@ -43,9 +43,9 @@
         }
         .image-wrapper {
             position: relative;
-            max-width: calc(100% - 40px); /* Adjust for padding */
-            width: calc(100% - 40px); /* Adjust for padding */
-            padding: 0 20px; /* Add padding to the left and right */
+            max-width: calc(100% - 20px); /* Adjust for padding */
+            width: calc(100% - 20px); /* Adjust for padding */
+            padding: 0 10px; /* Add padding to the left and right */
             box-sizing: border-box; /* Include padding in width calculations */
             transition: transform 0.3s ease;
             overflow: hidden; /* Hide overflow in the image wrapper */
@@ -74,6 +74,14 @@
             right: 10px;
             opacity: 1;
             pointer-events: auto;
+        }
+
+        /* Media query for desktop screens */
+        @media (min-width: 300px) { /* Adjust the min-width as needed */
+            #imageContainer {
+                max-width: 500px; /* Set your desired max width for desktop */
+                margin: 0 auto; /* Center the container */
+            }
         }
     </style>
 </head>
