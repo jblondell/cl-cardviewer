@@ -9,8 +9,6 @@ function displayImage() {
 		paddedNumber = imageNumber.padStart(2, '0');
 	}
 
-	//const imageContainer = document.getElementById('imageContainer');
-
 	// Clear the input field after showing the image
 	imageNumberInput.value = '';
 
@@ -75,7 +73,7 @@ function addImageToPage(paddedNumber) {
 
 	// Create the image element
 	const img = document.createElement('img');
-	img.src = `${paddedNumber}.png`;
+	img.src = `images/${paddedNumber}.png`;
 	img.alt = `${paddedNumber}`;
 
 	// Create the delete button
